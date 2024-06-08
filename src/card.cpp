@@ -1,5 +1,3 @@
-
-
 #include "card.h"
 
 
@@ -55,5 +53,27 @@ void Card::printProbabilities() const {
             std::cout << std::setw(10) << prob << " ";
         }
         std::cout << std::endl;
+    }
+}
+
+
+void Card::normalizeProbabilities() {
+    double sum = 0.0;
+    for (const auto& row : probabilities) {
+        sum += std::accumulate(row.begin(), row.end(), 0.0);
+    }
+
+    if (sum == 0.0) {
+        // If the sum is 0, set uniform distribution
+        double uniform_prob = 1.0 / (NUM_VALUES * NUM_COLORS);
+        for (auto& row : probabilities) {
+            std::fill(row.begin(), row.end(), uniform_prob);
+        }
+    } else {
+        for (auto& row : probabilities) {
+            for (double& prob : row) {
+                prob /= sum;
+            }
+        }
     }
 }

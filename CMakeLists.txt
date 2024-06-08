@@ -9,5 +9,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add the executable
-add_executable(hanabi src/main.cpp)
+add_executable(
+    hanabi src/main.cpp
+    src/card.cpp
+)
 
