@@ -13,4 +13,3 @@ add_executable(
     hanabi src/main.cpp
     src/card.cpp
 )
-
