@@ -3,7 +3,7 @@
 
 int main()
 {
-    Card card;
+    FuzzyCard card;
 
     // Example of setting a color
     card.setColor(2);

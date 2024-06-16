@@ -1,11 +1,11 @@
 #include "card.h"
 
 
-Card::Card() : probabilities(NUM_VALUES, std::vector<double>(NUM_COLORS, 1.0 / (NUM_VALUES * NUM_COLORS))) {
+FuzzyCard::FuzzyCard() : probabilities(NUM_VALUES, std::vector<double>(NUM_COLORS, 1.0 / (NUM_VALUES * NUM_COLORS))) {
     normalizeProbabilities();
 }
 
-void Card::setColor(int color){
+void FuzzyCard::setColor(int color){
     if (color >= 0 && color < NUM_COLORS) {
         for (int i = 0; i < NUM_VALUES; ++i) {
             for (int j = 0; j < NUM_COLORS; ++j) {
@@ -21,7 +21,7 @@ void Card::setColor(int color){
 }
 
 
-void Card::setValue(int value){
+void FuzzyCard::setValue(int value){
     if (value >= 0 && value < NUM_VALUES) {
         for (int j = 0; j < NUM_COLORS; ++j) {
             for (int i = 0; i < NUM_VALUES; ++i) {
@@ -37,7 +37,7 @@ void Card::setValue(int value){
 }
 
 
-double Card::getProbability(int value, int color) const {
+double FuzzyCard::getProbability(int value, int color) const {
         if (value >= 0 && value < NUM_VALUES && color >= 0 && color < NUM_COLORS) {
             return probabilities[value][color];
         } else {
@@ -47,7 +47,7 @@ double Card::getProbability(int value, int color) const {
 }
 
 
-void Card::printProbabilities() const {
+void FuzzyCard::printProbabilities() const {
     for (const auto& row : probabilities) {
         for (double prob : row) {
             std::cout << std::setw(10) << prob << " ";
@@ -57,7 +57,7 @@ void Card::printProbabilities() const {
 }
 
 
-void Card::normalizeProbabilities() {
+void FuzzyCard::normalizeProbabilities() {
     double sum = 0.0;
     for (const auto& row : probabilities) {
         sum += std::accumulate(row.begin(), row.end(), 0.0);
