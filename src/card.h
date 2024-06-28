@@ -1,3 +1,6 @@
+#ifndef CARD_H
+#define CARD_H
+
 /**
  * This class represents a knowledge about a given card or a set of cards.
  * The knowledge is spread across a matrix with #VALUES columns and #COLORS
@@ -17,7 +20,7 @@
  * There are also defined possible operations that cards can undergo:
  * - addition,
  * - multiplication.
- * In both cases the underlying operation is performed elemen-wise across both
+ * In both cases the underlying operation is performed element-wise across both
  * matrices entries. After each of these the resulting matrix is ALWAYS
  * NORMALIZED (i.e., its entries sum up to 1.0). The implementation forbids
  * the matrix from being not normalized at any moment.
@@ -25,34 +28,31 @@
 
 #include <iomanip>
 #include <iostream>
+#include <map>
 #include <numeric>
 #include <vector>
 
+const int NUM_VALUES = 5;
+const int NUM_COLORS = 4;
+const std::vector<int> mapping = {3, 2, 2, 2, 1};
+
 class FuzzyCard {
 public:
-  static const int NUM_VALUES = 6;
-  static const int NUM_COLORS = 4;
-
   FuzzyCard();
+  FuzzyCard(int color, int value);
   void setColor(int color);
   void setValue(int value);
   double getProbability(int value, int color) const;
-  void printProbabilities() const;
-
-private:
-  std::vector<std::vector<double>> probabilities;
-
-  void normalizeProbabilities();
+  void print(bool probs = false) const;
 
   FuzzyCard operator+(const FuzzyCard &other) const {
     FuzzyCard result;
     for (int i = 0; i < NUM_VALUES; ++i) {
       for (int j = 0; j < NUM_COLORS; ++j) {
-        result.probabilities[i][j] =
-            this->probabilities[i][j] + other.probabilities[i][j];
+        result.counts[i][j] = this->counts[i][j] + other.counts[i][j];
       }
     }
-    result.normalizeProbabilities();
+    result.get_probabilities();
     return result;
   }
 
@@ -60,11 +60,17 @@ private:
     FuzzyCard result;
     for (int i = 0; i < NUM_VALUES; ++i) {
       for (int j = 0; j < NUM_COLORS; ++j) {
-        result.probabilities[i][j] =
-            this->probabilities[i][j] * other.probabilities[i][j];
+        result.counts[i][j] = this->counts[i][j] * other.counts[i][j];
       }
     }
-    result.normalizeProbabilities();
+    result.get_probabilities();
     return result;
   }
+
+private:
+  std::vector<std::vector<int>> counts;
+
+  std::vector<std::vector<double>> get_probabilities() const;
 };
+
+#endif

@@ -1,10 +1,20 @@
 #include "card.h"
 
-FuzzyCard::FuzzyCard()
-    : probabilities(
-          NUM_VALUES,
-          std::vector<double>(NUM_COLORS, 1.0 / (NUM_VALUES * NUM_COLORS))) {
-  normalizeProbabilities();
+FuzzyCard::FuzzyCard() : counts(NUM_VALUES, std::vector<int>(NUM_COLORS, 0)) {
+  // if no arguments, we initialize blindly taking mapping into account
+  for (int val = 0; val < NUM_VALUES; val++) {
+    // Determine the value based on the mapping
+    int count = mapping[val];
+    // Assign the value to all rows in the current column
+    for (int col = 0; col < NUM_COLORS; col++) {
+      counts[val][col] = count;
+    }
+  }
+}
+
+FuzzyCard::FuzzyCard(int color, int value)
+    : counts(NUM_VALUES, std::vector<int>(NUM_COLORS, 0)) {
+  counts[color][value] = 1.;
 }
 
 void FuzzyCard::setColor(int color) {
@@ -12,11 +22,10 @@ void FuzzyCard::setColor(int color) {
     for (int i = 0; i < NUM_VALUES; ++i) {
       for (int j = 0; j < NUM_COLORS; ++j) {
         if (j != color) {
-          probabilities[i][j] = 0.0;
+          counts[i][j] = 0;
         }
       }
     }
-    normalizeProbabilities();
   } else {
     std::cerr << "Invalid color index" << std::endl;
   }
@@ -27,51 +36,55 @@ void FuzzyCard::setValue(int value) {
     for (int j = 0; j < NUM_COLORS; ++j) {
       for (int i = 0; i < NUM_VALUES; ++i) {
         if (i != value) {
-          probabilities[i][j] = 0.0;
+          counts[i][j] = 0;
         }
       }
     }
-    normalizeProbabilities();
   } else {
     std::cerr << "Invalid value index" << std::endl;
   }
 }
 
 double FuzzyCard::getProbability(int value, int color) const {
+  std::vector<std::vector<double>> probs = get_probabilities();
   if (value >= 0 && value < NUM_VALUES && color >= 0 && color < NUM_COLORS) {
-    return probabilities[value][color];
+    return probs[value][color];
   } else {
     std::cerr << "Invalid value or color index" << std::endl;
     return -1.0;
   }
 }
 
-void FuzzyCard::printProbabilities() const {
-  for (const auto &row : probabilities) {
-    for (double prob : row) {
-      std::cout << std::setw(10) << prob << " ";
+void FuzzyCard::print(bool probs) const {
+  if (probs) {
+    auto probs_values = get_probabilities();
+    for (const auto &row : probs_values) {
+      for (auto prob : row) {
+        std::cout << std::setw(10) << prob << " ";
+      }
+      std::cout << std::endl;
     }
-    std::cout << std::endl;
+  } else {
+    for (const auto &row : counts) {
+      for (auto prob : row) {
+        std::cout << std::setw(10) << prob << " ";
+      }
+      std::cout << std::endl;
+    }
   }
 }
 
-void FuzzyCard::normalizeProbabilities() {
+std::vector<std::vector<double>> FuzzyCard::get_probabilities() const {
+  std::vector<std::vector<double>> probabilities(
+      NUM_VALUES, std::vector<double>(NUM_COLORS, 0.));
   double sum = 0.0;
-  for (const auto &row : probabilities) {
+  for (const auto &row : counts) {
     sum += std::accumulate(row.begin(), row.end(), 0.0);
   }
-
-  if (sum == 0.0) {
-    // If the sum is 0, set uniform distribution
-    double uniform_prob = 1.0 / (NUM_VALUES * NUM_COLORS);
-    for (auto &row : probabilities) {
-      std::fill(row.begin(), row.end(), uniform_prob);
-    }
-  } else {
-    for (auto &row : probabilities) {
-      for (double &prob : row) {
-        prob /= sum;
-      }
+  for (int val = 0; val < NUM_VALUES; val++) {
+    for (int col = 0; col < NUM_COLORS; col++) {
+      probabilities[val][col] = counts[val][col] / sum;
     }
   }
+  return probabilities;
 }
