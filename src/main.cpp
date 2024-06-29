@@ -1,4 +1,4 @@
-#include "card.h"
+#include "fuzzycard.h"
 #include "hanabi.h"
 #include <iostream>
 

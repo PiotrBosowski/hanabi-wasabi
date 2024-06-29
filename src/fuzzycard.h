@@ -1,5 +1,5 @@
-#ifndef CARD_H
-#define CARD_H
+#ifndef FUZZYCARD_H
+#define FUZZYCARD_H
 
 /**
  * This class represents a knowledge about a given card or a set of cards.
@@ -32,13 +32,11 @@
 #include <numeric>
 #include <vector>
 
-const int NUM_VALUES = 5;
-const int NUM_COLORS = 4;
 const std::vector<int> mapping = {3, 2, 2, 2, 1};
 
 class FuzzyCard {
 public:
-  FuzzyCard();
+  FuzzyCard(bool empty = false);
   FuzzyCard(int color, int value);
   void setColor(int color);
   void setValue(int value);
@@ -66,6 +64,9 @@ public:
     result.get_probabilities();
     return result;
   }
+
+  static const int NUM_VALUES = 5;
+  static const int NUM_COLORS = 4;
 
 private:
   std::vector<std::vector<int>> counts;

@@ -1,13 +1,16 @@
-#include "card.h"
+#include "fuzzycard.h"
 
-FuzzyCard::FuzzyCard() : counts(NUM_VALUES, std::vector<int>(NUM_COLORS, 0)) {
+FuzzyCard::FuzzyCard(bool empty)
+    : counts(NUM_VALUES, std::vector<int>(NUM_COLORS, 0)) {
   // if no arguments, we initialize blindly taking mapping into account
-  for (int val = 0; val < NUM_VALUES; val++) {
-    // Determine the value based on the mapping
-    int count = mapping[val];
-    // Assign the value to all rows in the current column
-    for (int col = 0; col < NUM_COLORS; col++) {
-      counts[val][col] = count;
+  if (!empty) {
+    for (int val = 0; val < NUM_VALUES; val++) {
+      // Determine the value based on the mapping
+      int count = mapping[val];
+      // Assign the value to all rows in the current column
+      for (int col = 0; col < NUM_COLORS; col++) {
+        counts[val][col] = count;
+      }
     }
   }
 }
