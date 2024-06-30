@@ -40,13 +40,13 @@ public:
   FuzzyCard(int color, int value);
   void setColor(int color);
   void setValue(int value);
-  double getProbability(int value, int color) const;
+  double getProbability(int color, int value) const;
   void print(bool probs = false) const;
 
   FuzzyCard operator+(const FuzzyCard &other) const {
     FuzzyCard result(true);
-    for (int i = 0; i < NUM_VALUES; ++i) {
-      for (int j = 0; j < NUM_COLORS; ++j) {
+    for (int i = 0; i < NUM_COLORS; ++i) {
+      for (int j = 0; j < NUM_VALUES; ++j) {
         result.counts[i][j] = this->counts[i][j] + other.counts[i][j];
       }
     }
@@ -55,25 +55,34 @@ public:
 
   FuzzyCard operator*(const FuzzyCard &other) const {
     FuzzyCard result(true);
-    for (int i = 0; i < NUM_VALUES; ++i) {
-      for (int j = 0; j < NUM_COLORS; ++j) {
+    for (int i = 0; i < NUM_COLORS; ++i) {
+      for (int j = 0; j < NUM_VALUES; ++j) {
         result.counts[i][j] = this->counts[i][j] * other.counts[i][j];
       }
     }
     return result;
   }
 
+  FuzzyCard operator=(const FuzzyCard &other) {
+    for (int i = 0; i < NUM_COLORS; ++i) {
+      for (int j = 0; j < NUM_VALUES; ++j) {
+        counts[i][j] = other.counts[i][j];
+      }
+    }
+    return *this;
+  }
+
   FuzzyCard operator+=(const FuzzyCard &other) {
-    for (int i = 0; i < NUM_VALUES; ++i) {
-      for (int j = 0; j < NUM_COLORS; ++j) {
+    for (int i = 0; i < NUM_COLORS; ++i) {
+      for (int j = 0; j < NUM_VALUES; ++j) {
         counts[i][j] += other.counts[i][j];
       }
     }
     return *this;
   }
 
-  static const int NUM_VALUES = 5;
   static const int NUM_COLORS = 4;
+  static const int NUM_VALUES = 5;
 
 private:
   std::vector<std::vector<int>> counts;
