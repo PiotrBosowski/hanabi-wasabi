@@ -12,8 +12,8 @@
 
 class Hanabi {
 public:
-  Hanabi(int num_players = 2);
-  void play_card(FuzzyCard);
+  Hanabi(int num_players = 3, int cards_on_hand = 5);
+  void play_card(int player_id, int card_id);
 
 private:
   std::vector<FuzzyCard> hidden_pool;
@@ -21,11 +21,15 @@ private:
   // (TM)
   FuzzyCard rejected_pool;
   FuzzyCard played_cards;
-  int hints_left;
+  int hints_left = 8;
+  int mistakes_left = 3;
   int num_players;
+  int cards_on_hand;
   std::vector<Player> players;
   std::vector<std::vector<FuzzyCard>> players_hands;
   void update_players_knowledge();
+  bool check_played_integrity();
+  void give_player_a_card(int player_id);
 };
 
 #endif
