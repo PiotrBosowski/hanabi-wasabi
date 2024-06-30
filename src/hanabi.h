@@ -14,6 +14,7 @@ class Hanabi {
 public:
   Hanabi(int num_players = 3, int cards_on_hand = 5);
   void play_card(int player_id, int card_id);
+  FuzzyCard public_knowledge() const;
 
 private:
   std::vector<FuzzyCard> hidden_pool;

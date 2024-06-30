@@ -7,7 +7,8 @@
 Hanabi::Hanabi(int num_players, int cards_on_hand)
     : num_players{num_players}, rejected_pool{true},
       cards_on_hand{cards_on_hand}, played_cards{true},
-      players_hands(num_players), players(num_players) {
+      players_hands(num_players) {
+  players = std::vector<Player>(num_players, Player{*this, cards_on_hand});
   for (int col = 0; col < FuzzyCard::NUM_COLORS; col++) {
     for (int val = 0; val < FuzzyCard::NUM_VALUES; val++) {
       auto repeats = mapping[val];
@@ -26,6 +27,10 @@ Hanabi::Hanabi(int num_players, int cards_on_hand)
     give_player_a_card(i % num_players);
   }
 
+  std::cout << "Making 2 moves" << std::endl;
+  play_card(0, 0);
+  play_card(0, 0);
+
   auto sum =
       std::accumulate(hidden_pool.begin(), hidden_pool.end(), FuzzyCard(true));
   std::cout << "Total counts of hidden cards (deck):" << std::endl;
@@ -34,6 +39,14 @@ Hanabi::Hanabi(int num_players, int cards_on_hand)
   rejected_pool.print();
 
   std::cout << "Public knowledge:" << std::endl;
+  public_knowledge().print();
+
+  for (auto player : players) {
+    player.print();
+  }
+}
+
+FuzzyCard Hanabi::public_knowledge() const {
   /**
    * The knowledge available to everyone - can always be shared.
    * Is comprised of:
@@ -41,11 +54,7 @@ Hanabi::Hanabi(int num_players, int cards_on_hand)
    * - played cards.
    */
   FuzzyCard public_knowledge = rejected_pool + played_cards;
-  public_knowledge.print();
-
-  for (auto player : players) {
-    player.print();
-  }
+  return public_knowledge;
 }
 
 void Hanabi::play_card(int player_id, int card_id) {
