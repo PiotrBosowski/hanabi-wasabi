@@ -6,6 +6,8 @@
 
 #include "fuzzycard.h"
 
+class Hanabi;
+
 class Player {
   /**
    * The knowledge available only to the Player - can never be shared!
@@ -13,8 +15,12 @@ class Player {
    * - all other players' hands (PRIVATE),
    */
   FuzzyCard private_knowledge;
+  std::vector<FuzzyCard> beliefs_about_hand;
+  int cards_on_hand;
+  const Hanabi &game;
 
 public:
+  Player(const Hanabi &game, int cards_on_hand);
   void
   update_knowledge(const FuzzyCard &rejected_pool,
                    const FuzzyCard &played_cards,
