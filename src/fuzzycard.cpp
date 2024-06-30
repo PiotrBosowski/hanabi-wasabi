@@ -55,7 +55,8 @@ void FuzzyCard::print(bool probs) const {
   for (int val = 0; val < NUM_VALUES; val++) {
     for (int col = 0; col < NUM_COLORS; col++) {
       auto item = (probs) ? probs_values[col][val] : counts[col][val];
-      std::cout << std::setw(7) << item << " ";
+      std::cout << std::fixed << std::setprecision(3) << std::setw(7) << item
+                << " ";
     }
     std::cout << std::endl;
   }

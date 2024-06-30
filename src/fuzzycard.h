@@ -53,6 +53,16 @@ public:
     return result;
   }
 
+  FuzzyCard operator-(const FuzzyCard &other) const {
+    FuzzyCard result(true);
+    for (int i = 0; i < NUM_COLORS; ++i) {
+      for (int j = 0; j < NUM_VALUES; ++j) {
+        result.counts[i][j] = this->counts[i][j] - other.counts[i][j];
+      }
+    }
+    return result;
+  }
+
   FuzzyCard operator*(const FuzzyCard &other) const {
     FuzzyCard result(true);
     for (int i = 0; i < NUM_COLORS; ++i) {
