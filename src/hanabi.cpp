@@ -27,9 +27,13 @@ Hanabi::Hanabi(int num_players, int cards_on_hand)
     give_player_a_card(i % num_players);
   }
 
-  std::cout << "Making 2 moves" << std::endl;
-  play_card(0, 0);
-  play_card(0, 0);
+  auto move_counter = 0;
+  while (mistakes_left) {
+    auto player_to_move = move_counter % num_players;
+    std::cout << "Trying to make a move" << std::endl;
+    play_card(player_to_move, rand() % cards_on_hand);
+  }
+  std::cout << "Game over." << std::endl;
 
   auto sum =
       std::accumulate(hidden_pool.begin(), hidden_pool.end(), FuzzyCard(true));
