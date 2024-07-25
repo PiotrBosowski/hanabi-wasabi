@@ -61,11 +61,14 @@ void Hanabi::play_card(int player_id, int card_id) {
   auto the_card = players_hands[player_id][card_id];
   players_hands[player_id].erase(players_hands[player_id].begin() + card_id);
   auto postmove_result = played_cards + the_card;
-  if (check_played_integrity()) {
+  if (postmove_result.is_contiguous()) {
+    std::cout << "Move accepted" << std::endl;
     played_cards = postmove_result;
   } else {
     mistakes_left--;
     rejected_pool += the_card;
+    std::cout << "Move rejected (" << mistakes_left << " mistakes left)"
+              << std::endl;
   }
   give_player_a_card(player_id);
   update_players_knowledge();
@@ -77,8 +80,6 @@ void Hanabi::give_player_a_card(int player_id) {
   hidden_pool.pop_back();
   update_players_knowledge();
 }
-
-bool Hanabi::check_played_integrity() { return true; }
 
 void Hanabi::update_players_knowledge() {
   for (int i = 0; i < num_players; i++) {

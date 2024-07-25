@@ -42,6 +42,7 @@ public:
   void setValue(int value);
   double getProbability(int color, int value) const;
   void print(bool probs = false) const;
+  bool is_contiguous() const;
 
   FuzzyCard operator+(const FuzzyCard &other) const {
     FuzzyCard result(true);
@@ -91,7 +92,7 @@ public:
     return *this;
   }
 
-  static const int NUM_COLORS = 4;
+  static const int NUM_COLORS = 5;
   static const int NUM_VALUES = 5;
 
 private:

@@ -76,3 +76,23 @@ std::vector<std::vector<double>> FuzzyCard::get_probabilities() const {
   }
   return probabilities;
 }
+
+bool FuzzyCard::is_contiguous() const {
+  for (int col = 0; col < NUM_COLORS; col++) {
+    bool color_continue = true;
+    for (int val = 0; val < NUM_VALUES; val++) {
+      auto current = counts[col][val];
+      if (current > 1)
+        return false;
+      if (color_continue) {
+        if (!current) {
+          color_continue = false;
+        }
+      } else {
+        if (current)
+          return false;
+      }
+    }
+  }
+  return true;
+}

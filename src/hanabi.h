@@ -29,7 +29,7 @@ private:
   std::vector<Player> players;
   std::vector<std::vector<FuzzyCard>> players_hands;
   void update_players_knowledge();
-  bool check_played_integrity();
+  bool check_played_integrity(const FuzzyCard &postmove_result);
   void give_player_a_card(int player_id);
 };
 
