@@ -43,6 +43,7 @@ public:
   double getProbability(int color, int value) const;
   void print(bool probs = false) const;
   bool is_contiguous() const;
+  unsigned int sum() const;
 
   FuzzyCard operator+(const FuzzyCard &other) const {
     FuzzyCard result(true);

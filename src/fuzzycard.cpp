@@ -96,3 +96,13 @@ bool FuzzyCard::is_contiguous() const {
   }
   return true;
 }
+
+unsigned int FuzzyCard::sum() const {
+  unsigned int result = 0;
+  for (int col = 0; col < NUM_COLORS; col++) {
+    for (int val = 0; val < NUM_VALUES; val++) {
+      result += counts[col][val];
+    }
+  }
+  return result;
+}

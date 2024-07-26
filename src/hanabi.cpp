@@ -33,7 +33,7 @@ Hanabi::Hanabi(int num_players, int cards_on_hand)
     std::cout << "Trying to make a move" << std::endl;
     play_card(player_to_move, rand() % cards_on_hand);
   }
-  std::cout << "Game over." << std::endl;
+  std::cout << "Game over. Score: " << played_cards.sum() << std::endl;
 
   auto sum =
       std::accumulate(hidden_pool.begin(), hidden_pool.end(), FuzzyCard(true));
@@ -61,6 +61,8 @@ FuzzyCard Hanabi::public_knowledge() const {
   return public_knowledge;
 }
 
+bool Hanabi::is_ending() const { return !bool(hidden_pool.size()); }
+
 void Hanabi::play_card(int player_id, int card_id) {
   auto the_card = players_hands[player_id][card_id];
   players_hands[player_id].erase(players_hands[player_id].begin() + card_id);
@@ -78,11 +80,16 @@ void Hanabi::play_card(int player_id, int card_id) {
   update_players_knowledge();
 }
 
-void Hanabi::give_player_a_card(int player_id) {
-  FuzzyCard card = hidden_pool.back();
-  players_hands[player_id].push_back(card);
-  hidden_pool.pop_back();
-  update_players_knowledge();
+bool Hanabi::give_player_a_card(int player_id) {
+  if (!is_ending()) {
+    FuzzyCard card = hidden_pool.back();
+    players_hands[player_id].push_back(card);
+    hidden_pool.pop_back();
+    update_players_knowledge();
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void Hanabi::update_players_knowledge() {

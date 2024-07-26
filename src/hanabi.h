@@ -15,6 +15,7 @@ public:
   Hanabi(int num_players = 3, int cards_on_hand = 5);
   void play_card(int player_id, int card_id);
   FuzzyCard public_knowledge() const;
+  bool is_ending() const;
 
 private:
   std::vector<FuzzyCard> hidden_pool;
@@ -30,7 +31,7 @@ private:
   std::vector<std::vector<FuzzyCard>> players_hands;
   void update_players_knowledge();
   bool check_played_integrity(const FuzzyCard &postmove_result);
-  void give_player_a_card(int player_id);
+  bool give_player_a_card(int player_id);
 };
 
 #endif
